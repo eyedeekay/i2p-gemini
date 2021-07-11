@@ -47,6 +47,7 @@ file:
 	@echo '' >> README.md
 
 index:
+	mkdir -p www
 	/home/idk/.local/bin/md2gemini README.md -l at-end > index.gmi
-	pandoc README.md > www/index.htmlgemi
+	pandoc README.md > www/index.html
 	cp *.* www
