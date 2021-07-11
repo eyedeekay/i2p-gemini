@@ -21,6 +21,9 @@ file:
 	@echo 'default, pass the `-files` flag to change it) and i2p-gemini' >> README.md
 	@echo 'will take care of the rest.' >> README.md
 	@echo '' >> README.md
+	@echo 'An instance of it is sometimes available at this address.' >> README.md
+	@echo '' >> README.md
+	@echo ' - `gemini://3sswn7xy4v4ev2q2o3r3cr5hxsoowbf5i6wksqxebpuv3zsva3nq.b32.i2p`' >> README.md
 	@echo 'Anyone with a Go toolchain installed should be able to install' >> README.md
 	@echo 'with `go get -u i2pgit.org/idk/i2p-gemini`' >> README.md
 	@echo 'file www/i2p-gemini www/i2p-gemini-osx www/i2p-gemini.exe' >> README.md
@@ -32,7 +35,7 @@ file:
 	@echo '[The source code is a single `.go` file](server.go), requiring these' >> README.md
 	@echo '[modules](go.mod). You can download a static binary for linux here:' >> README.md
 	@echo '[i2p-gemini](i2p-gemini), for OSX here: [i2p-gemini-osx](i2p-gemini-osx)' >> README.md
-	@echo 'and for Windows here [i2p-gemini.exe]' >> README.md
+	@echo 'and for Windows here [i2p-gemini.exe](i2p-gemini.exe)' >> README.md
 	@echo '' >> README.md
 	@echo '```' >> README.md
 	file www/i2p-gemini >> README.md
@@ -48,6 +51,6 @@ file:
 
 index:
 	mkdir -p www
-	/home/idk/.local/bin/md2gemini README.md -l at-end > index.gmi
+	/home/idk/.local/bin/md2gemini README.md -l paragraph > index.gmi
 	pandoc README.md > www/index.html
 	cp *.* www
