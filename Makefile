@@ -62,6 +62,8 @@ index:
 	pandoc README.md >> www/index.html
 	@echo "</body>" >> www/index.html
 	@echo "</html>" >> www/index.html
+	cp www/index.html index.html
+	cp home.css www/home.css
 	cp *.* www
 
 
