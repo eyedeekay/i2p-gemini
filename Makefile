@@ -55,7 +55,7 @@ file:
 	@echo '' >> README.md
 
 index:
-	mkdir -p www
+	mkdir -p www/www
 	/home/idk/.local/bin/md2gemini README.md -l paragraph > www/index.gmi
 	@echo "<!DOCTYPE html>" > www/index.html
 	@echo "<html>" >> www/index.html
@@ -70,5 +70,6 @@ index:
 	cp www/index.html index.html
 	cp home.css www/home.css
 	cp *.* www
+	cp -v www/* www/www; true
 
 

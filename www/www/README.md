@@ -34,8 +34,8 @@ Usage of ./www/i2p-gemini:
 
 [The source code is a single `.go` file](server.go), requiring these
 [modules](go.mod). You can download a static binary for linux here:
-[i2p-gemini](i2p-gemini), for OSX here: [i2p-gemini-osx](i2p-gemini-osx)
-and for Windows here [i2p-gemini.exe](i2p-gemini.exe)
+[i2p-gemini](www/i2p-gemini), for OSX here: [i2p-gemini-osx](www/i2p-gemini-osx)
+and for Windows here [i2p-gemini.exe](www/i2p-gemini.exe)
 
 ```
 www/i2p-gemini: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=SBwjMpKc12gMetzv9KYI/wZ4yTsG_cGBFsFt_s-oj/HWYTfU3y7pzgXhUK4naW/RGn4uz7IvZOzQPzDnVDR, not stripped
