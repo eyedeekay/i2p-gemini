@@ -1,6 +1,6 @@
 module i2pgit.org/idk/i2p-gemini
 
-go 1.16
+go 1.14
 
 require (
 	git.sr.ht/~adnano/go-gemini v0.2.2
