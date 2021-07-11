@@ -11,6 +11,7 @@ will take care of the rest.
 An instance of it is sometimes available at this address.
 
  - `gemini://3sswn7xy4v4ev2q2o3r3cr5hxsoowbf5i6wksqxebpuv3zsva3nq.b32.i2p`
+
 Anyone with a Go toolchain installed should be able to install
 with `go get -u i2pgit.org/idk/i2p-gemini`
 file www/i2p-gemini www/i2p-gemini-osx www/i2p-gemini.exe
