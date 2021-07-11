@@ -51,6 +51,17 @@ file:
 
 index:
 	mkdir -p www
-	/home/idk/.local/bin/md2gemini README.md -l paragraph > index.gmi
-	pandoc README.md > www/index.html
+	/home/idk/.local/bin/md2gemini README.md -l paragraph > www/index.gmi
+	@echo "<!DOCTYPE html>" > www/index.html
+	@echo "<html>" >> www/index.html
+	@echo "<head>" >> www/index.html
+	@echo "  <title>I2P Gemini Server</title>" >> www/index.html
+	@echo "  <link rel=\"stylesheet\" type=\"text/css\" href =\"home.css\" />" >> www/index.html
+	@echo "</head>" >> www/index.html
+	@echo "<body>" >> www/index.html
+	pandoc README.md >> www/index.html
+	@echo "</body>" >> www/index.html
+	@echo "</html>" >> www/index.html
 	cp *.* www
+
+
