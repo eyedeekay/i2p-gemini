@@ -25,7 +25,9 @@ file:
 	@echo 'with `go get -u i2pgit.org/idk/i2p-gemini`' >> README.md
 	@echo 'file www/i2p-gemini www/i2p-gemini-osx www/i2p-gemini.exe' >> README.md
 	@echo '' >> README.md
+	@echo '```' >> README.md
 	./www/i2p-gemini -h 2>&1 | tee -a README.md
+	@echo '```' >> README.md
 	@echo '' >> README.md
 	@echo '[The source code is a single `.go` file](server.go), requiring these' >> README.md
 	@echo '[modules](go.mod). You can download a static binary for linux here:' >> README.md

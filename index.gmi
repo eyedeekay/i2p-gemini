@@ -4,7 +4,17 @@ This is a static fileserver that speaks the Gemini protocol that defaults to onl
 
 Anyone with a Go toolchain installed should be able to install with `go get -u i2pgit.org/idk/i2p-gemini` file www/i2p-gemini www/i2p-gemini-osx www/i2p-gemini.exe
 
-Usage of ./www/i2p-gemini:   -certs string     	Directory where server certificates(TLS) will be stored (default "var/lib/gemini/certs")   -files string     	Directory of files to serve up with Gemini (default "www")   -name string     	Name of the service to pass to SAM (default "i2pgemini")   -sam string     	SAM API to connect to and user (default "127.0.0.1:7656")
+```
+Usage of ./www/i2p-gemini:
+  -certs string
+    	Directory where server certificates(TLS) will be stored (default "var/lib/gemini/certs")
+  -files string
+    	Directory of files to serve up with Gemini (default "www")
+  -name string
+    	Name of the service to pass to SAM (default "i2pgemini")
+  -sam string
+    	SAM API to connect to and user (default "127.0.0.1:7656")
+```
 
 The source code is a single `.go` file[1], requiring these modules[2]. You can download a static binary for linux here: i2p-gemini[3], for OSX here: i2p-gemini-osx[4] and for Windows here [i2p-gemini.exe]
 

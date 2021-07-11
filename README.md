@@ -12,6 +12,7 @@ Anyone with a Go toolchain installed should be able to install
 with `go get -u i2pgit.org/idk/i2p-gemini`
 file www/i2p-gemini www/i2p-gemini-osx www/i2p-gemini.exe
 
+```
 Usage of ./www/i2p-gemini:
   -certs string
     	Directory where server certificates(TLS) will be stored (default "var/lib/gemini/certs")
@@ -21,6 +22,7 @@ Usage of ./www/i2p-gemini:
     	Name of the service to pass to SAM (default "i2pgemini")
   -sam string
     	SAM API to connect to and user (default "127.0.0.1:7656")
+```
 
 [The source code is a single `.go` file](server.go), requiring these
 [modules](go.mod). You can download a static binary for linux here:
