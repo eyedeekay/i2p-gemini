@@ -29,6 +29,10 @@ file:
 	@echo 'with `go get -u i2pgit.org/idk/i2p-gemini`' >> README.md
 	@echo 'file www/i2p-gemini www/i2p-gemini-osx www/i2p-gemini.exe' >> README.md
 	@echo '' >> README.md
+	@echo "Here's a screenshot of it running in gneto." >> README.md
+	@echo '' >> README.md
+	@echo '![running in gneto](screenshot.png)' >> README.md
+	@echo '' >> README.md
 	@echo '```' >> README.md
 	./www/i2p-gemini -h 2>&1 | tee -a README.md
 	@echo '```' >> README.md

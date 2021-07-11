@@ -16,6 +16,10 @@ Anyone with a Go toolchain installed should be able to install
 with `go get -u i2pgit.org/idk/i2p-gemini`
 file www/i2p-gemini www/i2p-gemini-osx www/i2p-gemini.exe
 
+Here's a screenshot of it running in gneto.
+
+![running in gneto](screenshot.png)
+
 ```
 Usage of ./www/i2p-gemini:
   -certs string
