@@ -8,8 +8,9 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"time"
+	"path/filepath"
+//	"crypto/x509/pkix"
 
 	"git.sr.ht/~adnano/go-gemini"
 	"git.sr.ht/~adnano/go-gemini/certificate"
@@ -19,25 +20,46 @@ import (
 )
 
 var (
-	certdir  = flag.String("certs", "var/lib/gemini/certs", "Directory where server certificates(TLS) will be stored")
+	certdir = flag.String("certs","var/lib/gemini/certs","Directory where server certificates(TLS) will be stored")
 	filesdir = flag.String("files", "www", "Directory of files to serve up with Gemini")
-	name     = flag.String("name", "i2pgemini", "Name of the service to pass to SAM")
-	samaddr  = flag.String("sam", "127.0.0.1:7656", "SAM API to connect to and user")
+	name = flag.String("name","i2pgemini","Name of the service to pass to SAM")
+	samaddr  = flag.String("sam","127.0.0.1:7656","SAM API to connect to and user")
 )
 
 func main() {
 	flag.Parse()
 	os.MkdirAll(*certdir, 0755)
-	listener, err := sam.I2PListener(*name, *samaddr, filepath.Join(*certdir, "gemini"))
+	listener, err := sam.I2PListener(*name,*samaddr,filepath.Join(*certdir,"gemini"))
 	if err != nil {
 		log.Fatal(err)
 	}
+	base32 := listener.Addr().(i2pkeys.I2PAddr).Base32()
 	certificates := &certificate.Store{}
-	certificates.Register(listener.Addr().String())
+	if _, err := os.Stat(filepath.Join(*certdir,base32+".crt")); os.IsNotExist(err) {
+		cert, err := certificate.Create(certificate.CreateOptions{
+			DNSNames: []string{base32},
+	//		IPAddresses: []string{nil},
+			Duration: (time.Hour*43800),
+			Ed25519: true,
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = certificate.Write(cert, filepath.Join(*certdir,base32+".crt"), filepath.Join(*certdir,base32+".key"))
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = certificates.Add(base32, cert)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+//	certificates.Register(base32)
 	if err := certificates.Load(*certdir); err != nil {
 		log.Fatal(err)
 	}
-	log.Println("gemini://" + listener.Addr().(i2pkeys.I2PAddr).Base32())
+
+	log.Println("gemini://"+base32)
 
 	mux := &gemini.Mux{}
 	mux.Handle("/", gemini.FileServer(os.DirFS(*filesdir)))
