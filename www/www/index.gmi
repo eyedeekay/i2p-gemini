@@ -28,9 +28,9 @@ The source code is a single `.go` file[1], requiring these modules[2]. You can d
 
 => server.go 1: server.go
 => go.mod 2: go.mod
-=> www/i2p-gemini 3: www/i2p-gemini
-=> www/i2p-gemini-osx 4: www/i2p-gemini-osx
-=> www/i2p-gemini.exe 5: www/i2p-gemini.exe
+=> i2p-gemini 3: i2p-gemini
+=> i2p-gemini-osx 4: i2p-gemini-osx
+=> i2p-gemini.exe 5: i2p-gemini.exe
 
 ```
 www/i2p-gemini: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=SBwjMpKc12gMetzv9KYI/wZ4yTsG_cGBFsFt_s-oj/HWYTfU3y7pzgXhUK4naW/RGn4uz7IvZOzQPzDnVDR, not stripped

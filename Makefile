@@ -39,8 +39,8 @@ file:
 	@echo '' >> README.md
 	@echo '[The source code is a single `.go` file](server.go), requiring these' >> README.md
 	@echo '[modules](go.mod). You can download a static binary for linux here:' >> README.md
-	@echo '[i2p-gemini](i2p-gemini), for OSX here: [i2p-gemini-osx](i2p-gemini-osx)' >> README.md
-	@echo 'and for Windows here [i2p-gemini.exe](i2p-gemini.exe)' >> README.md
+	@echo '[i2p-gemini](www/i2p-gemini), for OSX here: [i2p-gemini-osx](www/i2p-gemini-osx)' >> README.md
+	@echo 'and for Windows here [i2p-gemini.exe](www/i2p-gemini.exe)' >> README.md
 	@echo '' >> README.md
 	@echo '```' >> README.md
 	file www/i2p-gemini >> README.md
