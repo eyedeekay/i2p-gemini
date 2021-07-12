@@ -18,7 +18,7 @@ file www/i2p-gemini www/i2p-gemini-osx www/i2p-gemini.exe
 
 Here's a screenshot of it running in gneto.
 
-![running in gneto](screenshot.png)
+![running in gneto](www/screenshot.png)
 
 ```
 Usage of ./www/i2p-gemini:
