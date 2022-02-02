@@ -1,75 +1,185 @@
+VERSION=0.0.1
+CGO_ENABLED=0
+export CGO_ENABLED=0
 
-all: linux osx windows file index
+PORT=7678
+RESDIR=conf
 
-linux:
-	go build -tags netgo -o www/i2p-gemini
+GOOS?=$(shell uname -s | tr A-Z a-z)
+GOARCH?="amd64"
 
-osx:
-	GOOS=darwin go build -tags netgo -o www/i2p-gemini-osx
+ARG=-v -tags netgo -ldflags '-w -extldflags "-static"'
+
+BINARY=i2p-gemini
+SIGNER=hankhill19580@gmail.com
+CONSOLEPOSTNAME=Gopher-Like Server
+USER_GH=eyedeekay
+PLUGIN=$(HOME)/.i2p/plugins/$(BINARY)-$(GOOS)-$(GOARCH)
+
+PREFIX?=/usr/local
+
+binary:
+	go build $(ARG) -tags="netgo" -o $(BINARY)-$(GOOS)-$(GOARCH) .
+
+install-binary: binary
+	cp -v $(BINARY)-$(GOOS)-$(GOARCH) $(PLUGIN)/lib
+
+plugin-install:
+	make p; true
+	mkdir -p $(PLUGIN)
+	cp -vr plugin/* $(PLUGIN)
+
+install:
+	install -m755 $(BINARY) $(PREFIX)/bin/$(BINARY)
+
+build: dep binary
+	
+p: dep binary su3
+
+clean:
+	rm -f $(BINARY)-plugin plugin $(BINARY)-*zip -r $(BINARY)-$(GOOS)-$(GOARCH) $(BINARY)-$(GOOS)-$(GOARCH).exe tmp $(RESDIR)/www $(BINARY) $(BINARY).exe
+	rm -f *.su3 *.zip $(BINARY)-$(GOOS)-$(GOARCH) $(BINARY)-*
+	git clean -df
+
+all: windows linux osx bsd
 
 windows:
-	GOOS=windows go build -tags netgo -o www/i2p-gemini.exe
+	GOOS=windows GOARCH=amd64 make build su3
+	GOOS=windows GOARCH=386 make build su3
 
-file:
-	@echo 'Gemini Fileserver for I2P' > README.md
-	@echo '=========================' >> README.md
-	@echo '' >> README.md
-	@echo 'This is a static fileserver that speaks the Gemini protocol' >> README.md
-	@echo 'that defaults to only using I2P connections, while retaining' >> README.md
-	@echo "all of Gemini's TLS-based authentication features. Just make" >> README.md
-	@echo 'sure that it has a directory of files to share(`./www` by' >> README.md
-	@echo 'default, pass the `-files` flag to change it) and i2p-gemini' >> README.md
-	@echo 'will take care of the rest.' >> README.md
-	@echo '' >> README.md
-	@echo 'An instance of it is sometimes available at this address.' >> README.md
-	@echo '' >> README.md
-	@echo ' - `gemini://3sswn7xy4v4ev2q2o3r3cr5hxsoowbf5i6wksqxebpuv3zsva3nq.b32.i2p`' >> README.md
-	@echo '' >> README.md
-	@echo 'Anyone with a Go toolchain installed should be able to install' >> README.md
-	@echo 'with `go get -u i2pgit.org/idk/i2p-gemini`' >> README.md
-	@echo 'file www/i2p-gemini www/i2p-gemini-osx www/i2p-gemini.exe' >> README.md
-	@echo '' >> README.md
-	@echo "Here's a screenshot of it running in gneto." >> README.md
-	@echo '' >> README.md
-	@echo '![running in gneto](www/screenshot.png)' >> README.md
-	@echo '' >> README.md
-	@echo '```' >> README.md
-	./www/i2p-gemini -h 2>&1 | tee -a README.md
-	@echo '```' >> README.md
-	@echo '' >> README.md
-	@echo '[The source code is a single `.go` file](server.go), requiring these' >> README.md
-	@echo '[modules](go.mod). You can download a static binary for linux here:' >> README.md
-	@echo '[i2p-gemini](www/i2p-gemini), for OSX here: [i2p-gemini-osx](www/i2p-gemini-osx)' >> README.md
-	@echo 'and for Windows here [i2p-gemini.exe](www/i2p-gemini.exe)' >> README.md
-	@echo '' >> README.md
-	@echo '```' >> README.md
-	file www/i2p-gemini >> README.md
-	sha256sum www/i2p-gemini >> README.md
-	@echo '' >> README.md
-	file www/i2p-gemini-osx >> README.md
-	sha256sum www/i2p-gemini-osx >> README.md
-	@echo '' >> README.md
-	file www/i2p-gemini.exe >> README.md
-	sha256sum www/i2p-gemini.exe >> README.md
-	@echo '```' >> README.md
-	@echo '' >> README.md
+linux:
+	GOOS=linux GOARCH=amd64 make build su3
+	GOOS=linux GOARCH=arm64 make build su3
+	GOOS=linux GOARCH=386 make build su3
+
+osx:
+	GOOS=darwin GOARCH=amd64 make build su3
+	GOOS=darwin GOARCH=arm64 make build su3
+
+bsd:
+#	GOOS=freebsd GOARCH=amd64 make build su3
+#	GOOS=openbsd GOARCH=amd64 make build su3
+
+dep:
+	mkdir -p $(RESDIR)/lib
+	cp "$(HOME)/Workspace/GIT_WORK/i2p.i2p/build/shellservice.jar" $(RESDIR)/lib/shellservice.jar -v
+
+res:
+	rm -rf $(RESDIR)
+	mkdir -p $(RESDIR)
+	cp -rv web $(RESDIR)/web
+
+su3: res
+	i2p.plugin.native -name=$(BINARY) \
+		-signer=$(SIGNER) \
+		-version "$(VERSION)" \
+		-author=$(SIGNER) \
+		-autostart=true \
+		-clientname=$(BINARY) \
+		-consolename="$(BINARY) - $(CONSOLEPOSTNAME)" \
+		-delaystart="1" \
+		-desc="`cat desc`" \
+		-exename=$(BINARY)-$(GOOS)-$(GOARCH) \
+		-icondata=icon/icon.png \
+		-consoleurl="http://127.0.0.1:$(PORT)" \
+		-updateurl="http://idk.i2p/$(BINARY)/$(BINARY)-$(GOOS)-$(GOARCH).su3" \
+		-website="http://idk.i2p/$(BINARY)/" \
+		-command="$(BINARY)-$(GOOS)-$(GOARCH)" \
+		-license=MIT \
+		-res=$(RESDIR)/
+	unzip -o $(BINARY)-$(GOOS)-$(GOARCH).zip -d $(BINARY)-$(GOOS)-$(GOARCH)-zip
+
+sum:
+	sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3
+
+version:
+	gothub release -p -u eyedeekay -r $(BINARY) -t "$(VERSION)" -d "`cat desc`"; true
+
+upload:
+	gothub upload -R -u eyedeekay -r $(BINARY) -t "$(VERSION)" -f $(BINARY)-$(GOOS)-$(GOARCH).su3 -n $(BINARY)-$(GOOS)-$(GOARCH).su3 -l "`sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3`"
+	gothub upload -R -u eyedeekay -r $(BINARY) -t "$(VERSION)" -f $(BINARY)-$(GOOS)-$(GOARCH) -n $(BINARY)-$(GOOS)-$(GOARCH) -l "`sha256sum $(BINARY)-$(GOOS)-$(GOARCH)`"
+
+upload-windows:
+	GOOS=windows GOARCH=amd64 make upload
+	GOOS=windows GOARCH=386 make upload
+
+upload-linux:
+	GOOS=linux GOARCH=amd64 make upload
+	GOOS=linux GOARCH=arm64 make upload
+	GOOS=linux GOARCH=386 make upload
+
+upload-osx:
+	GOOS=darwin GOARCH=amd64 make upload
+	GOOS=darwin GOARCH=arm64 make upload
+
+upload-bsd:
+#	GOOS=freebsd GOARCH=amd64 make upload
+#	GOOS=openbsd GOARCH=amd64 make upload
+
+upload-all: upload-windows upload-linux upload-osx upload-bsd
+
+download-su3s:
+	GOOS=windows GOARCH=amd64 make download-single-su3
+	GOOS=windows GOARCH=386 make download-single-su3
+	GOOS=linux GOARCH=amd64 make download-single-su3
+	GOOS=linux GOARCH=arm64 make download-single-su3
+	GOOS=linux GOARCH=386 make download-single-su3
+	GOOS=darwin GOARCH=amd64 make download-single-su3
+	GOOS=darwin GOARCH=arm64 make download-single-su3
+#	GOOS=freebsd GOARCH=amd64 make download-single-su3
+#	GOOS=openbsd GOARCH=amd64 make download-single-su3
+
+download-single-su3:
+	wget -N -c "https://github.com/$(USER_GH)/$(BINARY)/releases/download/$(VERSION)/$(BINARY)-$(GOOS)-$(GOARCH).su3"
+
+early-release: clean linux windows version upload-linux upload-windows
+
+release: clean all version upload-all
 
 index:
-	mkdir -p www/www
-	/home/idk/.local/bin/md2gemini README.md -l paragraph > www/index.gmi
-	@echo "<!DOCTYPE html>" > www/index.html
-	@echo "<html>" >> www/index.html
-	@echo "<head>" >> www/index.html
-	@echo "  <title>I2P Gemini Server</title>" >> www/index.html
-	@echo "  <link rel=\"stylesheet\" type=\"text/css\" href =\"home.css\" />" >> www/index.html
-	@echo "</head>" >> www/index.html
-	@echo "<body>" >> www/index.html
-	pandoc README.md >> www/index.html
-	@echo "</body>" >> www/index.html
-	@echo "</html>" >> www/index.html
-	cp www/index.html index.html
-	cp home.css www/home.css
-	cp *.* www
-	cp -v www/* www/www; true
+	@echo "<!DOCTYPE html>" > index.html
+	@echo "<html>" >> index.html
+	@echo "<head>" >> index.html
+	@echo "  <title>$(BINARY) - $(CONSOLEPOSTNAME)</title>" >> index.html
+	@echo "  <link rel=\"stylesheet\" type=\"text/css\" href =\"/style.css\" />" >> index.html
+	@echo "</head>" >> index.html
+	@echo "<body>" >> index.html
+	pandoc README.md >> index.html
+	@echo "</body>" >> index.html
+	@echo "</html>" >> index.html
 
+deb: clean
+	mv *.com.crl ../; true
+	mv *.com.crt ../; true
+	mv *.com.pem ../; true
+	rm ../$(BINARY)_$(VERSION).orig.tar.gz -f
+	tar --exclude=".git" \
+		--exclude="*.com.crl" \
+		--exclude="*.com.crt" \
+		--exclude="*.com.pem" \
+		--exclude="$(BINARY)" \
+		--exclude="$(BINARY).exe" \
+		--exclude="tmp" \
+		-cvzf ../$(BINARY)_$(VERSION).orig.tar.gz	.
+	dpkg-buildpackage -us -uc
+	mv ../*.com.crl ./
+	mv ../*.com.crt ./
+	mv ../*.com.pem ./
 
+debsrc: clean
+	mv *.com.crl ../; true
+	mv *.com.crt ../; true
+	mv *.com.pem ../; true
+	rm ../$(BINARY)_$(VERSION).orig.tar.gz -f
+	tar --exclude=".git" \
+		--exclude="*.com.crl" \
+		--exclude="*.com.crt" \
+		--exclude="*.com.pem" \
+		--exclude="$(BINARY)" \
+		--exclude="$(BINARY).exe" \
+		--exclude="tmp" \
+		-cvzf ../$(BINARY)_$(VERSION).orig.tar.gz	.
+	debuild -S
+	mv ../*.com.crl ./
+	mv ../*.com.crt ./
+	mv ../*.com.pem ./
