@@ -62,15 +62,15 @@ bsd:
 
 dep:
 	mkdir -p $(RESDIR)/lib
-	cp "$(HOME)/Workspace/GIT_WORK/i2p.i2p/build/shellservice.jar" $(RESDIR)/lib/shellservice.jar -v
+#	cp "$(HOME)/build/shellservice.jar" $(RESDIR)/lib/shellservice.jar -v
 
 res:
 	rm -rf $(RESDIR)
 	mkdir -p $(RESDIR)
-	cp -rv web $(RESDIR)/web
+	cp -rv www $(RESDIR)/www
 
 su3: res
-	i2p.plugin.native -name=$(BINARY) \
+	i2p.plugin.native -name=$(BINARY)-$(GOOS)-$(GOARCH) \
 		-signer=$(SIGNER) \
 		-version "$(VERSION)" \
 		-author=$(SIGNER) \
