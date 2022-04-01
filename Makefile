@@ -69,9 +69,12 @@ res:
 	mkdir -p $(RESDIR)
 	cp -rv www $(RESDIR)/www
 
+SIGNER_DIR=$(HOME)/i2p-go-keys/
+
 su3: res
 	i2p.plugin.native -name=$(BINARY)-$(GOOS)-$(GOARCH) \
 		-signer=$(SIGNER) \
+		-signer-dir=$(SIGNER_DIR) \
 		-version "$(VERSION)" \
 		-author=$(SIGNER) \
 		-autostart=true \
