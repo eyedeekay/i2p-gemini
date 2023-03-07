@@ -16,7 +16,7 @@ import (
 	"git.sr.ht/~adnano/go-gemini/certificate"
 
 	"github.com/eyedeekay/sam3/helper"
-	"github.com/eyedeekay/sam3/i2pkeys"
+	"github.com/eyedeekay/i2pkeys"
 )
 
 var (
